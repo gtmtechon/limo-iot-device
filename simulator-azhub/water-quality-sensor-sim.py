@@ -7,6 +7,8 @@ import datetime
 import random
 
 # Event Hubs 연결 문자열 (Event Hubs 네임스페이스의 공유 액세스 정책에서 'Send' 권한이 있는 연결 문자열)
+# 이곳을 실제 디바이스의 연결 문자열로 변경해야 합니다.
+# 예시: "HostName=<your-iot-hub>.azure-devices.net;DeviceId=<your-device-id>;SharedAccess
 EVENT_HUB_CONNECTION_STR = "Endpoint=sb://limo-evthub-sc01.servicebus.windows.net/;SharedAccessKeyName=acp-evthub-sensor-g1;SharedAccessKey=VgF065j9ZyHUXanxCtGLlZ39rfbdO1X6++AEhMYG9uI=;EntityPath=evthub-sensor-g1"
 EVENT_HUB_NAME = "evthub-sensor-g1" # 예: water-quality-data-hub
 
@@ -24,8 +26,8 @@ async def send_water_quality_data():
                 "temperature": round(random.uniform(15.0, 30.0), 2),
                 "ph": round(random.uniform(6.5, 8.5), 2),
                 "dissolved_oxygen": round(random.uniform(5.0, 12.0), 2),
-                "turbidity": 60
-                # "turbidity": round(random.uniform(0.5, 50.0), 2)
+                #"turbidity": 60
+                "turbidity": round(random.uniform(0.5, 50.0), 2)
             }
             event_data = EventData(json.dumps(sensor_data))
             print(f"Sending data: {sensor_data}")
