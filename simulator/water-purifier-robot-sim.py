@@ -4,7 +4,7 @@ import json
 from azure.iot.device.aio import IoTHubDeviceClient
 
 # IoT Hub 디바이스 연결 문자열 (Azure Portal에서 디바이스 등록 시 얻은 연결 문자열)
-DEVICE_CONNECTION_STRING = ""
+DEVICE_CONNECTION_STRING = "HostName=iothub-iot01.azure-devices.net;DeviceId=water-purifier-robot-01;SharedAccessKey=p5YkARBM6DYIzASe+Mzk95EiYFRjEzeQ63E9hbol/TI="
 # 순차적으로 사용할 위치 좌표 리스트
 LOCATIONS = [
     {"latitude": 37.512786, "longitude": 127.106693},
@@ -24,6 +24,9 @@ async def main():
     # IoT Hub 클라이언트 생성
     device_client = IoTHubDeviceClient.create_from_connection_string(DEVICE_CONNECTION_STRING)    
     await device_client.connect()
+    
+    
+    
     print("Robot connected to IoT Hub.")
     # 위치 리스트를 순환하기 위한 인덱스
     location_index = 0
@@ -32,7 +35,7 @@ async def main():
 
     # C2D 메시지 수신 핸들러
     async def message_handler(message):
-        print(f"===================Received C2D message: {message.data.decode('utf-8')}")
+        print(f"===================\n Received C2D message: {message.data.decode('utf-8')}")
         try:
             command_data = json.loads(message.data.decode('utf-8'))
             command = command_data.get("command")

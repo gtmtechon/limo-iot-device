@@ -7,7 +7,7 @@ import datetime
 import random
 
 # Event Hubs 연결 문자열 (Event Hubs 네임스페이스의 공유 액세스 정책에서 'Send' 권한이 있는 연결 문자열)
-EVENT_HUB_CONNECTION_STR = ""
+EVENT_HUB_CONNECTION_STR = "Endpoint=sb://limo-evthub-sc01.servicebus.windows.net/;SharedAccessKeyName=acp-evthub-sensor-g1;SharedAccessKey=VgF065j9ZyHUXanxCtGLlZ39rfbdO1X6++AEhMYG9uI=;EntityPath=evthub-sensor-g1"
 EVENT_HUB_NAME = "evthub-sensor-g1" # 예: water-quality-data-hub
 
 async def send_water_quality_data():
