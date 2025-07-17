@@ -8,17 +8,17 @@
   "device_id": "water-purifier-robot-01",  
   "battery_level": 85,        // 배터리 잔량 (%). 
   "current_status": "idle",   // idle, moving, purifying, charging, error. 
-  "last_command_id": "cmd-12345", // 마지막으로 수신한 명령 ID (선택 사항). 
-  "purification_status": {    // 정화 작업 관련 데이터 (작업 중일 때만 포함). 
-    "filter_life_remaining": 70, // 필터 잔량 (%). 
-    "purified_volume_liters": 150 // 정화된 총량 (리터). 
+  "last_command_id": "cmd-12345", // 마지막으로 수신한 명령 ID (선택 사항).   
+  "purification_status": {    // 정화 작업 관련 데이터 (작업 중일 때만 포함).   
+    "filter_life_remaining": 70, // 필터 잔량 (%).  
+    "purified_volume_liters": 150 // 정화된 총량 (리터).   
   },  
-  "location": {               // 현재 위치 (선택 사항). 
-    "latitude": 37.5665,  
-    "longitude": 126.9780. 
-  },  
-  "error_code": null          // 에러 발생 시 코드 (예: "E001: Filter Clogged"). 
-}. 
+  "location": {               // 현재 위치 (선택 사항).   
+    "latitude": 37.5665,    
+    "longitude": 126.9780.   
+  },   
+  "error_code": null          // 에러 발생 시 코드 (예: "E001: Filter Clogged").  
+}.  
 
 
 ### 클라우드-디바이스 (C2D) 메시지 규격 (IoT Hub -> 로봇)
