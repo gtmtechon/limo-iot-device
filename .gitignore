@@ -1,0 +1,15 @@
+# 파일 무시
+.env
+*.env
+*.local
+*.log
+*.bak
+*.tmp
+*.swp
+*.DS_Store
+*.db
+*.sqlite
+*.pid
+# 다음과 같은 확장자는 전체 무시
+*.exe
+*.zip
