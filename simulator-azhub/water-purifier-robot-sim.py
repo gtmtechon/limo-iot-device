@@ -1,12 +1,16 @@
 # 필요한 라이브러리 설치: pip install azure-iot-device
 import asyncio
 import json
+import os
 from azure.iot.device.aio import IoTHubDeviceClient
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # IoT Hub 디바이스 연결 문자열 (Azure Portal에서 디바이스 등록 시 얻은 연결 문자열)
 # 이곳을 실제 디바이스의 연결 문자열로 변경해야 합니다.
 # 예시: "HostName=<your-iot-hub>.azure-devices.net;DeviceId=<your-device-id>;SharedAccess
-DEVICE_CONNECTION_STRING = "HostName=iothub-iot01.azure-devices.net;DeviceId=water-purifier-robot-01;SharedAccessKey=p5YkARBM6DYIzASe+Mzk95EiYFRjEzeQ63E9hbol/TI="
+
 
 
 
@@ -27,7 +31,12 @@ LOCATIONS = [
 
 async def main():
     # IoT Hub 클라이언트 생성
-    device_client = IoTHubDeviceClient.create_from_connection_string(DEVICE_CONNECTION_STRING)    
+    connectionString = os.getenv("WATERBOB_CONNECTION_STRING")
+    if not connectionString:
+        raise ValueError("WATERBOB_CONNECTION_STRING 환경 변수가 설정되지 않았습니다.")
+    print(f"Connecting to IoT Hub with connection string: {connectionString}")
+    # IoT Hub 디바이스 클라이언트 생성
+    device_client = IoTHubDeviceClient.create_from_connection_string(os.getenv("WATERBOB_CONNECTION_STRING")) 
     await device_client.connect()
     
     
