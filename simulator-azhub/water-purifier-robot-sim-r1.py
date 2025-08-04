@@ -3,6 +3,7 @@ import asyncio
 import json
 import os
 from azure.iot.device.aio import IoTHubDeviceClient
+from azure.iot.device import Message # Message 클래스 임포트
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,8 +11,6 @@ load_dotenv()
 # IoT Hub 디바이스 연결 문자열 (Azure Portal에서 디바이스 등록 시 얻은 연결 문자열)
 # 이곳을 실제 디바이스의 연결 문자열로 변경해야 합니다.
 # 예시: "HostName=<your-iot-hub>.azure-devices.net;DeviceId=<your-device-id>;SharedAccess
-
-
 
 
 # 순차적으로 사용할 위치 좌표 리스트
@@ -31,21 +30,17 @@ LOCATIONS = [
 
 async def main():
     # IoT Hub 클라이언트 생성
-    connectionString = os.getenv("WATERBOB_CONNECTION_STRING")
+    connectionString = os.getenv("R1_IOTHUB_CONNECTION_STRING")
     if not connectionString:
-        raise ValueError("WATERBOB_CONNECTION_STRING 환경 변수가 설정되지 않았습니다.")
+        raise ValueError("R1_IOTHUB_CONNECTION_STRING 환경 변수가 설정되지 않았습니다.")
     print(f"Connecting to IoT Hub with connection string: {connectionString}")
     # IoT Hub 디바이스 클라이언트 생성
-    device_client = IoTHubDeviceClient.create_from_connection_string(os.getenv("WATERBOB_CONNECTION_STRING")) 
+    device_client = IoTHubDeviceClient.create_from_connection_string(connectionString) 
     await device_client.connect()
-    
-    
     
     print("Robot connected to IoT Hub.")
     # 위치 리스트를 순환하기 위한 인덱스
     location_index = 0
-
-
 
     # C2D 메시지 수신 핸들러
     async def message_handler(message):
@@ -75,9 +70,14 @@ async def main():
 
     # D2C (디바이스-클라우드) 원격 분석 데이터 전송
     async def send_telemetry(data):
-        msg = json.dumps(data)
+        msg_json = json.dumps(data)
+        # Message 객체를 생성하고 content_type 및 content_encoding 속성 설정
+        msg = Message(msg_json)
+        msg.content_type = "application/json"
+        msg.content_encoding = "utf-8"
+        
         await device_client.send_message(msg)
-        print(f"Sent telemetry: {msg}")
+        print(f"Sent telemetry: {msg_json}") # msg_json을 로그에 출력하여 메시지 내용 확인
 
     # 주기적으로 로봇 상태 데이터 전송
     while True:
@@ -88,13 +88,15 @@ async def main():
 
 
         status_data = {
-            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-            "device_id": "water-purifier-robot-01",
-            "battery_level": random.randint(20, 100),
-            "current_status": random.choice(["idle", "purifying", "moving"]),
-            "purification_status": {
-                "filter_life_remaining": random.randint(10, 90),
-                "purified_volume_liters": round(random.uniform(100, 500), 2)
+            "ttimestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "deviceId": "water-purifier-robot-01",
+            "type": "robotStatus",
+            "batteryLevel": 15,
+            #"batteryLevel": random.randint(10, 90), # 배터리 레벨 10~90% 사이로 랜덤 생성
+            "currentStatus": random.choice(["idle", "purifying", "moving"]),
+            "purificationStatus": {
+                "filterLifeRemaining": random.randint(10, 90),
+                "purifiedVolumeLiters": round(random.uniform(100, 500), 2)
             },
             "location": current_location # 순차적으로 변경되는 location 데이터 사용
         }
